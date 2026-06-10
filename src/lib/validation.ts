@@ -32,7 +32,11 @@ export function validateNamingForm(client: string, format: string, subject: stri
 export function generateFilename(client: string, format: string, subject: string): string {
   const sanitized = sanitizeFilename(subject);
   if (!client || !format || !sanitized) return '';
-  return `Gradus - ${client} - ${format} - ${sanitized}`;
+  
+  const now = new Date();
+  const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}${String(now.getSeconds()).padStart(2, '0')}`;
+  
+  return `Gradus - ${client} - ${format} - ${sanitized} - ${timestamp}`;
 }
 
 export function generateBatchFilename(
