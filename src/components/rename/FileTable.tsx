@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { X } from 'lucide-react';
 import { useAppStore } from '@/store/useAppStore';
 import { generateBatchFilename, sanitizeFilename } from '@/lib/validation';
+import { WORLD_CUP_TEAMS } from '@/lib/constants';
 import { FileTypeBadge } from '@/components/shared/FileTypeBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { Button } from '@/components/ui/button';
@@ -19,30 +20,46 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export function FileTable() {
   const files = useAppStore((s) => s.files);
   const selectedClient = useAppStore((s) => s.selectedClient);
   const selectedFormat = useAppStore((s) => s.selectedFormat);
   const subject = useAppStore((s) => s.subject);
+  const namingMode = useAppStore((s) => s.namingMode);
   const removeFile = useAppStore((s) => s.removeFile);
+  const updateFileTeams = useAppStore((s) => s.updateFileTeams);
 
   const sanitizedSubject = sanitizeFilename(subject);
 
   const filesWithPreview = useMemo(
     () =>
       files.map((file, index) => {
+        let currentSubject = sanitizedSubject;
+        if (namingMode === 'world_cup') {
+          const t1 = file.team1 || 'Team 1';
+          const t2 = file.team2 || 'Team 2';
+          currentSubject = sanitizeFilename(`${t1} vs ${t2}`);
+        }
+
         const baseName = generateBatchFilename(
           selectedClient,
           selectedFormat,
-          sanitizedSubject,
+          currentSubject,
           index,
           files.length
         );
         const newName = baseName ? `${baseName}.${file.extension}` : '';
         return { ...file, newName };
       }),
-    [files, selectedClient, selectedFormat, sanitizedSubject]
+    [files, selectedClient, selectedFormat, sanitizedSubject, namingMode]
   );
 
   if (files.length === 0) {
@@ -62,6 +79,12 @@ export function FileTable() {
             <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9">Original Name</TableHead>
             <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9 w-[70px]">Ext</TableHead>
             <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9 w-[80px]">Type</TableHead>
+            {namingMode === 'world_cup' && (
+              <>
+                <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9 w-[130px]">Team 1</TableHead>
+                <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9 w-[130px]">Team 2</TableHead>
+              </>
+            )}
             <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9">New Filename</TableHead>
             <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9 w-[40px]"></TableHead>
           </TableRow>
@@ -87,6 +110,44 @@ export function FileTable() {
               <TableCell className="py-2.5">
                 <FileTypeBadge type={file.fileType} />
               </TableCell>
+              {namingMode === 'world_cup' && (
+                <>
+                  <TableCell className="py-2.5">
+                    <Select
+                      value={file.team1}
+                      onValueChange={(val) => updateFileTeams(file.id, val, file.team2)}
+                    >
+                      <SelectTrigger className="h-8 text-xs px-2">
+                        <SelectValue placeholder="Team 1" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {WORLD_CUP_TEAMS.map((team) => (
+                          <SelectItem key={team} value={team} className="text-xs">
+                            {team}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell className="py-2.5">
+                    <Select
+                      value={file.team2}
+                      onValueChange={(val) => updateFileTeams(file.id, file.team1, val)}
+                    >
+                      <SelectTrigger className="h-8 text-xs px-2">
+                        <SelectValue placeholder="Team 2" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {WORLD_CUP_TEAMS.map((team) => (
+                          <SelectItem key={team} value={team} className="text-xs">
+                            {team}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                </>
+              )}
               <TableCell className="py-2.5">
                 {file.newName ? (
                   <Tooltip>

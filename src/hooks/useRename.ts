@@ -12,6 +12,7 @@ export function useRename() {
     selectedClient,
     selectedFormat,
     subject,
+    namingMode,
     setIsRenaming,
     clearFiles,
   } = useAppStore();
@@ -19,10 +20,28 @@ export function useRename() {
   const addRecords = useHistoryStore((s) => s.addRecords);
 
   const rename = useCallback(async () => {
-    const validation = validateNamingForm(selectedClient, selectedFormat, subject);
-    if (!validation.valid) {
-      toast.error(validation.message);
+    if (!selectedClient) {
+      toast.error('Please select a client');
       return;
+    }
+    if (!selectedFormat) {
+      toast.error('Please select a format');
+      return;
+    }
+
+    if (namingMode === 'standard') {
+      const validation = validateNamingForm(selectedClient, selectedFormat, subject);
+      if (!validation.valid) {
+        toast.error(validation.message);
+        return;
+      }
+    } else {
+      // world_cup mode validation
+      const missingTeams = files.some((f) => !f.team1 || !f.team2);
+      if (missingTeams) {
+        toast.error('Please select both teams for all files');
+        return;
+      }
     }
 
     if (files.length === 0) {
@@ -34,10 +53,15 @@ export function useRename() {
 
     try {
       const requests: FileRenameRequest[] = files.map((file, index) => {
+        let currentSubject = subject;
+        if (namingMode === 'world_cup') {
+          currentSubject = `${file.team1} vs ${file.team2}`;
+        }
+        
         const baseName = generateBatchFilename(
           selectedClient,
           selectedFormat,
-          subject,
+          currentSubject,
           index,
           files.length
         );
@@ -51,18 +75,26 @@ export function useRename() {
       const results = await invoke<RenameResult[]>('rename_files', { files: requests });
 
       const now = new Date().toISOString();
-      const historyRecords: RenameRecord[] = results.map((result) => ({
-        id: crypto.randomUUID(),
-        date: now,
-        original_name: result.original_name,
-        new_name: result.new_name,
-        client: selectedClient,
-        format: selectedFormat,
-        subject: subject.trim(),
-        file_path: result.file_path,
-        success: result.success,
-        error: result.error,
-      }));
+      const historyRecords: RenameRecord[] = results.map((result) => {
+        const file = files.find(f => f.filePath === result.file_path);
+        let currentSubject = subject;
+        if (namingMode === 'world_cup' && file) {
+          currentSubject = `${file.team1} vs ${file.team2}`;
+        }
+
+        return {
+          id: crypto.randomUUID(),
+          date: now,
+          original_name: result.original_name,
+          new_name: result.new_name,
+          client: selectedClient,
+          format: selectedFormat,
+          subject: currentSubject.trim(),
+          file_path: result.file_path,
+          success: result.success,
+          error: result.error,
+        };
+      });
 
       await addRecords(historyRecords);
 
@@ -84,7 +116,7 @@ export function useRename() {
     } finally {
       setIsRenaming(false);
     }
-  }, [files, selectedClient, selectedFormat, subject, setIsRenaming, clearFiles, addRecords]);
+  }, [files, selectedClient, selectedFormat, subject, namingMode, setIsRenaming, clearFiles, addRecords]);
 
   return { rename };
 }

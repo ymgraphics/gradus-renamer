@@ -4,6 +4,8 @@ export type Page = 'main' | 'history' | 'settings';
 
 export type Theme = 'light' | 'dark' | 'system';
 
+export type NamingMode = 'standard' | 'world_cup';
+
 export interface FileEntry {
   id: string;
   originalName: string;
@@ -12,6 +14,8 @@ export interface FileEntry {
   filePath: string;
   newName: string;
   size: number;
+  team1?: string;
+  team2?: string;
 }
 
 export interface RenameOperation {

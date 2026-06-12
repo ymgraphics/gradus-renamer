@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { FileEntry, Page } from '@/types';
+import type { FileEntry, Page, NamingMode } from '@/types';
 
 interface AppState {
   // Navigation
@@ -7,6 +7,8 @@ interface AppState {
   setCurrentPage: (page: Page) => void;
 
   // Naming form
+  namingMode: NamingMode;
+  setNamingMode: (mode: NamingMode) => void;
   selectedClient: string;
   selectedFormat: string;
   subject: string;
@@ -20,6 +22,7 @@ interface AppState {
   removeFile: (id: string) => void;
   clearFiles: () => void;
   updateFileNewName: (id: string, newName: string) => void;
+  updateFileTeams: (id: string, team1?: string, team2?: string) => void;
   updateAllFileNames: (files: FileEntry[]) => void;
 
   // Rename state
@@ -33,6 +36,9 @@ interface AppState {
 export const useAppStore = create<AppState>((set) => ({
   currentPage: 'main',
   setCurrentPage: (page) => set({ currentPage: page }),
+
+  namingMode: 'standard',
+  setNamingMode: (mode) => set({ namingMode: mode }),
 
   selectedClient: '',
   selectedFormat: '',
@@ -56,6 +62,10 @@ export const useAppStore = create<AppState>((set) => ({
   updateFileNewName: (id, newName) =>
     set((state) => ({
       files: state.files.map((f) => (f.id === id ? { ...f, newName } : f)),
+    })),
+  updateFileTeams: (id, team1, team2) =>
+    set((state) => ({
+      files: state.files.map((f) => (f.id === id ? { ...f, team1, team2 } : f)),
     })),
   updateAllFileNames: (files) => set({ files }),
 

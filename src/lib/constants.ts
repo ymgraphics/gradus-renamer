@@ -16,3 +16,11 @@ export const DEFAULT_FORMATS = [
 export const APP_VERSION = '1.0.0';
 export const APP_NAME = 'Gradus Renamer';
 export const MAX_HISTORY_ENTRIES = 100;
+
+export const WORLD_CUP_TEAMS = [
+  'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Cameroon', 'Canada', 'Chile',
+  'Colombia', 'Costa Rica', 'Croatia', 'Denmark', 'Ecuador', 'Egypt', 'England', 'France',
+  'Germany', 'Ghana', 'Iran', 'Italy', 'Japan', 'Mexico', 'Morocco', 'Netherlands',
+  'Nigeria', 'Peru', 'Poland', 'Portugal', 'Qatar', 'Saudi Arabia', 'Senegal', 'Serbia',
+  'South Korea', 'Spain', 'Switzerland', 'Tunisia', 'USA', 'Uruguay', 'Wales'
+].sort();
