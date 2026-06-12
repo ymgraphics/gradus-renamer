@@ -38,7 +38,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IENGNjFEOTA3QjlGQzlFMTMKUldRVG52eTVCOWxoejlUenBZVzJGb3oxNm80c01FZUZGSkhGcXhURzBPckI3cWhYUDR1STlHWDEK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDVFREE5MTA3RkI5Mjg3NTcKUldSWGg1TDdCNUhhWHNpWTdvbTFFTTc0UiszQ2U4KzBHbkJzUDlsVDF1Qnl2QTNOQ1dqNHpza0YK",
       "endpoints": [
         "https://github.com/ymgraphics/gradus-renamer/releases/latest/download/latest.json"
       ]
