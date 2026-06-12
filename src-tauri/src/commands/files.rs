@@ -21,10 +21,7 @@ pub async fn get_file_metadata(paths: Vec<String>) -> Result<Vec<FileMetadata>, 
         let size = match std::fs::metadata(path) {
             Ok(meta) => meta.len(),
             Err(e) => {
-                return Err(format!(
-                    "Failed to read metadata for '{}': {}",
-                    path_str, e
-                ));
+                return Err(format!("Failed to read metadata for '{}': {}", path_str, e));
             }
         };
 

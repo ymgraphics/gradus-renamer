@@ -1,6 +1,7 @@
 import { useSettingsStore } from '@/store/useSettingsStore';
 import { ItemManager } from '@/components/settings/ItemManager';
 import { AppearanceSettings } from '@/components/settings/AppearanceSettings';
+import { UpdaterSettings } from '@/components/settings/UpdaterSettings';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export function SettingsPage() {
@@ -52,7 +53,8 @@ export function SettingsPage() {
             />
           </TabsContent>
 
-          <TabsContent value="appearance" className="mt-0">
+          <TabsContent value="appearance" className="mt-0 space-y-5">
+            <UpdaterSettings />
             <AppearanceSettings />
           </TabsContent>
         </div>

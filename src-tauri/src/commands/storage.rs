@@ -47,8 +47,7 @@ pub async fn save_settings(
     let json = serde_json::to_string_pretty(&settings)
         .map_err(|e| format!("Failed to serialize settings: {}", e))?;
 
-    fs::write(&settings_path, json)
-        .map_err(|e| format!("Failed to write settings file: {}", e))?;
+    fs::write(&settings_path, json).map_err(|e| format!("Failed to write settings file: {}", e))?;
 
     Ok(())
 }
@@ -82,8 +81,7 @@ pub async fn save_history(
     let json = serde_json::to_string_pretty(&history)
         .map_err(|e| format!("Failed to serialize history: {}", e))?;
 
-    fs::write(&history_path, json)
-        .map_err(|e| format!("Failed to write history file: {}", e))?;
+    fs::write(&history_path, json).map_err(|e| format!("Failed to write history file: {}", e))?;
 
     Ok(())
 }
@@ -118,8 +116,7 @@ pub async fn export_csv(
         csv_content.push_str(&line);
     }
 
-    fs::write(&export_path, csv_content)
-        .map_err(|e| format!("Failed to write CSV file: {}", e))?;
+    fs::write(&export_path, csv_content).map_err(|e| format!("Failed to write CSV file: {}", e))?;
 
     Ok(())
 }
