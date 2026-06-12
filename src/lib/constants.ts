@@ -13,7 +13,7 @@ export const DEFAULT_FORMATS = [
   'Other',
 ];
 
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '1.0.1';
 export const APP_NAME = 'Gradus Renamer';
 export const MAX_HISTORY_ENTRIES = 100;
 
