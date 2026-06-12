@@ -39,12 +39,22 @@ jobs:
         run: npm install
 
       - name: Load Private Key
+        shell: python
         run: |
-          EOF=$(openssl rand -hex 16)
-          echo "TAURI_PRIVATE_KEY<<$EOF" >> $GITHUB_ENV
-          cat src-tauri/updater.key >> $GITHUB_ENV
-          echo "" >> $GITHUB_ENV
-          echo "$EOF" >> $GITHUB_ENV
+          import os
+          import uuid
+          with open("src-tauri/updater.key", "rb") as f:
+              key_data = f.read().replace(b"\r\n", b"\n")
+          env_file = os.environ.get("GITHUB_ENV")
+          delimiter = "EOF_" + uuid.uuid4().hex
+          with open(env_file, "a", encoding="utf-8") as f:
+              f.write(f"TAURI_PRIVATE_KEY<<{delimiter}\n")
+          with open(env_file, "ab") as f:
+              f.write(key_data)
+              if not key_data.endswith(b"\n"):
+                  f.write(b"\n")
+          with open(env_file, "a", encoding="utf-8") as f:
+              f.write(f"{delimiter}\n")
 
       - name: Build Tauri App
         uses: tauri-apps/tauri-action@v0
