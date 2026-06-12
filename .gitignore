@@ -26,3 +26,6 @@ dist-ssr
 # macOS External Drive Metadata
 ._*
 .DS_Store
+
+# Tauri updater signing key — must never be committed (use GitHub Secrets)
+src-tauri/updater.key
