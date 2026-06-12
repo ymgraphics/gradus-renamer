@@ -38,11 +38,27 @@ jobs:
       - name: Install Frontend Dependencies
         run: npm install
 
+      - name: Format Private Key
+        env:
+          RAW_SECRET: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if [[ "$RAW_SECRET" == dW* ]]; then
+            echo "$RAW_SECRET" | base64 -d > private.key
+          else
+            echo "$RAW_SECRET" > private.key
+          fi
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "TAURI_PRIVATE_KEY<<$EOF" >> $GITHUB_ENV
+          cat private.key >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "$EOF" >> $GITHUB_ENV
+          rm private.key
+
       - name: Build Tauri App
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ env.TAURI_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
