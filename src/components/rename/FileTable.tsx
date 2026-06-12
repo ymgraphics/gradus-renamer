@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { X } from 'lucide-react';
+import { X, FileIcon } from 'lucide-react';
+import { convertFileSrc } from '@tauri-apps/api/core';
 import { useAppStore } from '@/store/useAppStore';
 import { generateBatchFilename, sanitizeFilename } from '@/lib/validation';
 import { WORLD_CUP_TEAMS } from '@/lib/constants';
@@ -76,6 +77,7 @@ export function FileTable() {
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">
+            <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9 w-[50px] text-center">Preview</TableHead>
             <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9">Original Name</TableHead>
             <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9 w-[70px]">Ext</TableHead>
             <TableHead className="text-[10px] uppercase tracking-wider font-medium h-9 w-[80px]">Type</TableHead>
@@ -92,6 +94,26 @@ export function FileTable() {
         <TableBody>
           {filesWithPreview.map((file) => (
             <TableRow key={file.id} className="group">
+              <TableCell className="py-2.5 px-2">
+                <div className="w-10 h-10 rounded-md border border-border/60 bg-muted flex items-center justify-center overflow-hidden shrink-0">
+                  {file.fileType === 'image' ? (
+                    <img
+                      src={convertFileSrc(file.filePath)}
+                      alt="preview"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : file.fileType === 'video' ? (
+                    <video
+                      src={convertFileSrc(file.filePath)}
+                      className="w-full h-full object-cover"
+                      muted
+                      preload="metadata"
+                    />
+                  ) : (
+                    <FileIcon size={16} className="text-muted-foreground/60" />
+                  )}
+                </div>
+              </TableCell>
               <TableCell className="py-2.5">
                 <Tooltip>
                   <TooltipTrigger asChild>
