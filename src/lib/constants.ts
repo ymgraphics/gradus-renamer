@@ -13,14 +13,17 @@ export const DEFAULT_FORMATS = [
   'Other',
 ];
 
-export const APP_VERSION = '1.0.1';
+export const APP_VERSION = '1.0.3';
 export const APP_NAME = 'Gradus Renamer';
 export const MAX_HISTORY_ENTRIES = 100;
 
+// 2026 FIFA World Cup — all 48 qualified teams (hosts: Canada, Mexico, USA)
 export const WORLD_CUP_TEAMS = [
-  'Argentina', 'Australia', 'Austria', 'Belgium', 'Brazil', 'Cameroon', 'Canada', 'Chile',
-  'Colombia', 'Costa Rica', 'Croatia', 'Denmark', 'Ecuador', 'Egypt', 'England', 'France',
-  'Germany', 'Ghana', 'Iran', 'Italy', 'Japan', 'Mexico', 'Morocco', 'Netherlands',
-  'Nigeria', 'Peru', 'Poland', 'Portugal', 'Qatar', 'Saudi Arabia', 'Senegal', 'Serbia',
-  'South Korea', 'Spain', 'Switzerland', 'Tunisia', 'USA', 'Uruguay', 'Wales'
+  'Algeria', 'Argentina', 'Australia', 'Austria', 'Belgium', 'Bosnia and Herzegovina',
+  'Brazil', 'Canada', 'Cape Verde', 'Colombia', 'Croatia', 'Curaçao', 'Czech Republic',
+  'DR Congo', 'Ecuador', 'Egypt', 'England', 'France', 'Germany', 'Ghana', 'Haiti',
+  'Iran', 'Iraq', 'Ivory Coast', 'Japan', 'Jordan', 'Mexico', 'Morocco', 'Netherlands',
+  'New Zealand', 'Norway', 'Panama', 'Paraguay', 'Portugal', 'Qatar', 'Saudi Arabia',
+  'Scotland', 'Senegal', 'South Africa', 'South Korea', 'Spain', 'Sweden', 'Switzerland',
+  'Tunisia', 'Turkey', 'USA', 'Uruguay', 'Uzbekistan'
 ].sort();
